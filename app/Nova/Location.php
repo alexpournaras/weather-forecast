@@ -41,10 +41,13 @@ class Location extends Resource
 	public function fields(NovaRequest $request): array
 	{
 		return [
-			Text::make('Name')->sortable()->rules('required', 'max:255'),
+			Text::make('Name')->sortable()->rules('required', 'max:255')
+				->placeholder('Please type a name for this Location'),
 
-			Number::make('Latitude')->min(-90)->max(90)->step('0.000001')->rules('required'),
-			Number::make('Longitude')->min(-180)->max(180)->step('0.000001')->rules('required'),
+			Number::make('Latitude')->min(-90)->max(90)->step('0.000001')->rules('required')
+				->placeholder('Please type the latitude (e.g., 40.712776)'),
+			Number::make('Longitude')->min(-180)->max(180)->step('0.000001')->rules('required')
+				->placeholder('Please type the longitude (e.g., -74.005974)'),
 
 			Boolean::make('Active')->sortable()->default(true),
 
