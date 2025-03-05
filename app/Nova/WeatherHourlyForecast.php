@@ -3,37 +3,25 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class WeatherDailyForecast extends Resource
+class WeatherHourlyForecast extends Resource
 {
 	/**
 	 * The model the resource corresponds to.
 	 *
-	 * @var class-string<\App\Models\WeatherDailyForecast>
+	 * @var class-string<\App\Models\WeatherHourlyForecast>
 	 */
-	public static $model = \App\Models\WeatherDailyForecast::class;
+	public static $model = \App\Models\WeatherHourlyForecast::class;
 
 	/**
 	 * The single value that should be used to represent the resource when being displayed.
 	 *
 	 * @var string
 	 */
-	public static $title = '';
-
-	/**
-	 * Label shown in the top of resource page.
-	 *
-	 * @var string
-	 */
-	public static function label() {
-		return 'Weather Daily Forecast';
-	}
+	public static $title = 'forecast_datetime';
 
 	/**
 	 * The columns that should be searched.
@@ -57,26 +45,14 @@ class WeatherDailyForecast extends Resource
 	public function fields(NovaRequest $request): array
 	{
 		return [
-			BelongsTo::make('Location')->sortable(),
-
-			Text::make('Forecast Source')
-				->displayUsing(function ($value) {
-					if ($value == 'open-meteo') return 'Open-Meteo';
-					elseif ($value == 'weatherapi') return 'WeatherAPI';
-					else return $value;
-				}),
-
-			Date::make('Forecast Date')
+			DateTime::make('Forecast DateTime')
 				->sortable()
 				->displayUsing(function ($value) {
-					return Carbon::parse($value)->format('l, j F Y'); 
+					return Carbon::parse($value)->format('H:i'); 
 				}),
 
-			Number::make('Maximum Temperature (°C)', 'temperature_max')->sortable(),
-			Number::make('Minimum Temperature (°C)', 'temperature_min')->sortable(),
-			Number::make('Total Precipitation (mm)', 'precipitation_sum')->sortable(),
-
-			HasMany::make('Weather Hourly Forecasts'),
+			Number::make('Temperature (°C)', 'temperature')->sortable(),
+			Number::make('Precipitation (mm)', 'precipitation')->sortable(),
 		];
 	}
 

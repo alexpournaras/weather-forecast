@@ -14,4 +14,9 @@ class WeatherDailyForecast extends Model
 	{
 		return $this->belongsTo(Location::class);
 	}
+
+	public function weatherHourlyForecasts()
+	{
+		return $this->hasMany(WeatherHourlyForecast::class);
+	}
 }
