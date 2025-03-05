@@ -2,36 +2,49 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Fields\Text;
+use Carbon\Carbon;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Location extends Resource
+class WeatherDailyForecast extends Resource
 {
 	/**
 	 * The model the resource corresponds to.
 	 *
-	 * @var class-string<\App\Models\Location>
+	 * @var class-string<\App\Models\WeatherDailyForecast>
 	 */
-	public static $model = \App\Models\Location::class;
+	public static $model = \App\Models\WeatherDailyForecast::class;
 
 	/**
 	 * The single value that should be used to represent the resource when being displayed.
 	 *
 	 * @var string
 	 */
-	public static $title = 'name';
+	public static $title = '';
+
+	/**
+	 * Label shown in the top of resource page.
+	 *
+	 * @var string
+	 */
+	public static function label() {
+		return 'Weather Daily Forecast';
+	}
 
 	/**
 	 * The columns that should be searched.
 	 *
-	 * @var array
 	 */
-	public static $search = [
-		'name',
-	];
+	public static $search = [];
+	public static $searchable = false;
+
+	/**
+	 * Hide resource from sidebar menu.
+	 *
+	 */
+	public static $displayInNavigation = false;
 
 	/**
 	 * Get the fields displayed by the resource.
@@ -41,15 +54,17 @@ class Location extends Resource
 	public function fields(NovaRequest $request): array
 	{
 		return [
-			Text::make('Name')->sortable()->rules('required', 'max:255'),
+			BelongsTo::make('Location')->sortable(),
 
-			Number::make('Latitude')->min(-90)->max(90)->step('0.000001')->rules('required'),
-			Number::make('Longitude')->min(-180)->max(180)->step('0.000001')->rules('required'),
+			Date::make('Forecast Date')
+				->sortable()
+				->displayUsing(function ($value) {
+					return Carbon::parse($value)->format('l, j F Y'); 
+				}),
 
-			Boolean::make('Active')->sortable()->default(true),
-
-			HasMany::make('Open-Meteo Daily Forecast', 'weatherForecastOpenMeteo', WeatherDailyForecast::class),
-        	HasMany::make('WeatherAPI Daily Forecast', 'weatherForecastWeatherApi', WeatherDailyForecast::class),
+			Number::make('Maximum Temperature (°C)', 'temperature_max')->sortable(),
+			Number::make('Minimum Temperature (°C)', 'temperature_min')->sortable(),
+			Number::make('Total Precipitation (mm)', 'precipitation_sum')->sortable(),
 		];
 	}
 
