@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class WeatherHourlyForecast extends Resource
 {
@@ -45,7 +46,7 @@ class WeatherHourlyForecast extends Resource
 	public function fields(NovaRequest $request): array
 	{
 		return [
-			DateTime::make('Forecast DateTime')
+			DateTime::make('Forecast Time', 'forecast_datetime')
 				->sortable()
 				->displayUsing(function ($value) {
 					return Carbon::parse($value)->format('H:i'); 
@@ -54,6 +55,17 @@ class WeatherHourlyForecast extends Resource
 			Number::make('Temperature (°C)', 'temperature')->sortable(),
 			Number::make('Precipitation (mm)', 'precipitation')->sortable(),
 		];
+	}
+
+	/**
+	 * Order resource index query by forecast date.
+	 *
+	 */
+	public static function indexQuery(NovaRequest $request, Builder $query): Builder
+	{
+		parent::indexQuery($request, $query);
+
+		return $query->orderBy('forecast_datetime');
 	}
 
 	/**

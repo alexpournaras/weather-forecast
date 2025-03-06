@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class WeatherDailyForecast extends Resource
 {
@@ -78,6 +79,17 @@ class WeatherDailyForecast extends Resource
 
 			HasMany::make('Weather Hourly Forecasts'),
 		];
+	}
+
+	/**
+	 * Order resource index query by forecast date.
+	 *
+	 */
+	public static function indexQuery(NovaRequest $request, Builder $query): Builder
+	{
+		parent::indexQuery($request, $query);
+
+		return $query->orderBy('forecast_date');
 	}
 
 	/**

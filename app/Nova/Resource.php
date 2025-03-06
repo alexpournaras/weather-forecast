@@ -15,6 +15,12 @@ abstract class Resource extends NovaResource
 	 */
 	public static function indexQuery(NovaRequest $request, Builder $query): Builder
 	{
+		// Remove default nova sorting by id.
+		$query->getQuery()->orders = array_values(array_filter(
+			$query->getQuery()->orders ?? [], 
+			fn($order) => strpos($order['column'], '.id') === false
+		));
+	
 		return $query;
 	}
 
