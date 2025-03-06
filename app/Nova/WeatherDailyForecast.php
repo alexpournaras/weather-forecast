@@ -51,6 +51,13 @@ class WeatherDailyForecast extends Resource
 	public static $displayInNavigation = false;
 
 	/**
+     * The number of resources to show per page via relationships.
+     *
+     * @var int
+     */
+    public static $perPageViaRelationship = 10;
+
+	/**
 	 * Get the fields displayed by the resource.
 	 *
 	 * @return array<int, \Laravel\Nova\Fields\Field>
