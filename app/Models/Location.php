@@ -26,7 +26,7 @@ class Location extends Model
 
 		$weatherForecastService = new WeatherForecastService($this, [
             new OpenMeteoProvider(),
-            // new WeatherApiProvider()
+            new WeatherApiProvider()
         ]);
 
 		$weatherForecastService->fetchWeatherForecasts();

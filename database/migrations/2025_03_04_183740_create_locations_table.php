@@ -14,8 +14,8 @@ return new class extends Migration
 		Schema::create('locations', function (Blueprint $table) {
 			$table->id();
 			$table->string('name');
-			$table->decimal('latitude', 8, 6);
-			$table->decimal('longitude', 8, 6);
+			$table->decimal('latitude', 10, 6);
+			$table->decimal('longitude', 10, 6);
 			$table->boolean('active')->default(true);
 			$table->timestamps();
 		});

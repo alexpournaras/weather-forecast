@@ -13,7 +13,7 @@ class OpenMeteoProvider implements WeatherForecastProviderInterface
 	public function fetchWeatherForecasts(Location $location)
 	{
 		// Open-Meteo: https://open-meteo.com/en/docs
-		$api_url = "https://api.open-meteo.com/v1/forecast?latitude={$location->latitude}&longitude={$location->longitude}&hourly=temperature_2m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_sum";
+		$api_url = "https://api.open-meteo.com/v1/forecast?latitude={$location->latitude}&longitude={$location->longitude}&hourly=temperature_2m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=3";
 
 		$response = Http::withOptions(['verify' => false])->get($api_url);
 
@@ -45,9 +45,9 @@ class OpenMeteoProvider implements WeatherForecastProviderInterface
 			$daily_forecast = WeatherDailyForecast::create([
 				'location_id' => $location->id,
 				'forecast_date' => $forecast_date,
-				'temperature_max' => $temperatures_max[$index] ?? null,
-				'temperature_min' => $temperatures_min[$index] ?? null,
-				'precipitation_sum' => $total_precipitation[$index] ?? null,
+				'temperature_max' => $temperatures_max[$index] ?? 0,
+				'temperature_min' => $temperatures_min[$index] ?? 0,
+				'precipitation_sum' => $total_precipitation[$index] ?? 0,
 				'forecast_source' => 'open-meteo',
 			]);
 
@@ -70,8 +70,8 @@ class OpenMeteoProvider implements WeatherForecastProviderInterface
 			WeatherHourlyForecast::create([
 				'weather_daily_forecast_id' => $daily_forecast_id,
 				'forecast_datetime' => Carbon::parse($time)->format('Y-m-d H:i:s'),
-				'temperature' => $temperatures[$index] ?? null,
-				'precipitation' => $precipitations[$index] ?? null,
+				'temperature' => $temperatures[$index] ?? 0,
+				'precipitation' => $precipitations[$index] ?? 0,
 			]);
 		}
 	}

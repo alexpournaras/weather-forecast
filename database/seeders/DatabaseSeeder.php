@@ -26,5 +26,40 @@ class DatabaseSeeder extends Seeder
 			'longitude' => 22.9309,
 			'active' => true,
 		]);
+
+		Location::create([
+			'name' => 'Rio de Janeiro',
+			'latitude' => -22.9064,
+			'longitude' => -43.1822,
+			'active' => true,
+		]);
+
+		Location::create([
+			'name' => 'Tokyo',
+			'latitude' => 35.6895,
+			'longitude' => 139.6917,
+			'active' => true,
+		]);
+
+		Location::create([
+			'name' => 'New York',
+			'latitude' => 40.7128,
+			'longitude' => -74.0060,
+			'active' => true,
+		]);
+
+		Location::create([
+			'name' => 'Sydney',
+			'latitude' => -33.8688,
+			'longitude' => 151.2093,
+			'active' => true,
+		]);
+
+		Location::create([
+			'name' => 'Cape Town',
+			'latitude' => -33.9249,
+			'longitude' => 18.4241,
+			'active' => false,
+		]);
 	}
 }
