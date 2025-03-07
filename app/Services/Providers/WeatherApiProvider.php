@@ -14,6 +14,8 @@ class WeatherApiProvider implements WeatherForecastProviderInterface
 	{
 		$WEATHER_API_KEY = env('WEATHER_API_KEY');
 
+		\Log::info("WeatherApiProvider: Fetching weather forecast for Location: {$location->name}");
+
 		// WeatherAPI: https://www.weatherapi.com/docs/
 		$api_url = "https://api.weatherapi.com/v1/forecast.json?key={$WEATHER_API_KEY}&q={$location->latitude},{$location->longitude}&days=3";
 
@@ -31,6 +33,9 @@ class WeatherApiProvider implements WeatherForecastProviderInterface
 			\Log::error("WeatherApiProvider: Missing forecast data for location: {$location->name}");
 			return;
 		}
+
+		// Delete existing forecasts
+		$location->deleteWeatherApiWeatherForecast();
 
 		$daily_forecasts = $data['forecast']['forecastday'];
 
@@ -74,5 +79,7 @@ class WeatherApiProvider implements WeatherForecastProviderInterface
 				]);
 			}
 		}
+
+		\Log::info("WeatherApiProvider: Fetched weather forecast for Location: {$location->name}");
 	}
 }

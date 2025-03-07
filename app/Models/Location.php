@@ -9,6 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
+	public function fetchLocationWeatherForecast()
+	{
+		if (!$this->active) return;
+
+		$weatherForecastService = new WeatherForecastService($this, [
+			new OpenMeteoProvider(),
+			new WeatherApiProvider()
+		]);
+
+		$weatherForecastService->fetchWeatherForecasts();
+	}
+
 	public function weatherForecastOpenMeteo()
 	{
 		return $this->hasMany(WeatherDailyForecast::class)->where('forecast_source', 'open-meteo');
@@ -19,22 +31,13 @@ class Location extends Model
 		return $this->hasMany(WeatherDailyForecast::class)->where('forecast_source', 'weatherapi');
 	}
 
-	public function fetchLocationWeatherForecast()
-	{
-		if (!$this->active) return;
-		$this->deleteLocationWeatherForecast();
-
-		$weatherForecastService = new WeatherForecastService($this, [
-            new OpenMeteoProvider(),
-            new WeatherApiProvider()
-        ]);
-
-		$weatherForecastService->fetchWeatherForecasts();
-	}
-
-	public function deleteLocationWeatherForecast()
+	public function deleteOpenMeteoWeatherForecast()
 	{
 		$this->weatherForecastOpenMeteo()->each(fn ($forecast) => $forecast->delete());
-    	$this->weatherForecastWeatherApi()->each(fn ($forecast) => $forecast->delete());
+	}
+
+	public function deleteWeatherApiWeatherForecast()
+	{
+		$this->weatherForecastWeatherApi()->each(fn ($forecast) => $forecast->delete());
 	}
 }

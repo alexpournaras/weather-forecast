@@ -27,6 +27,7 @@ class LocationObserver
 	 */
 	public function deleted(Location $location): void
 	{
-		$location->deleteLocationWeatherForecast();
+		$location->deleteOpenMeteoWeatherForecast();
+		$location->deleteWeatherApiWeatherForecast();
 	}
 }

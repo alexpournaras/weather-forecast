@@ -12,6 +12,8 @@ class OpenMeteoProvider implements WeatherForecastProviderInterface
 {
 	public function fetchWeatherForecasts(Location $location)
 	{
+		\Log::info("OpenMeteoProvider: Fetching weather forecast for Location: {$location->name}");
+
 		// Open-Meteo: https://open-meteo.com/en/docs
 		$api_url = "https://api.open-meteo.com/v1/forecast?latitude={$location->latitude}&longitude={$location->longitude}&hourly=temperature_2m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=3";
 
@@ -29,6 +31,9 @@ class OpenMeteoProvider implements WeatherForecastProviderInterface
 			\Log::error("OpenMeteoProvider: Missing daily or hourly data for location: {$location->name}");
 			return;
 		}
+
+		// Delete existing forecasts
+		$location->deleteOpenMeteoWeatherForecast();
 
 		// Get daily data from the API response
 		$dates = collect($data['daily']['time'] ?? []);
@@ -74,5 +79,7 @@ class OpenMeteoProvider implements WeatherForecastProviderInterface
 				'precipitation' => $precipitations[$index] ?? 0,
 			]);
 		}
+
+		\Log::info("OpenMeteoProvider: Fetched weather forecast for Location: {$location->name}");
 	}
 }
