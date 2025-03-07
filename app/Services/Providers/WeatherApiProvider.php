@@ -12,12 +12,13 @@ class WeatherApiProvider implements WeatherForecastProviderInterface
 {
 	public function fetchWeatherForecasts(Location $location)
 	{
-		$WEATHER_API_KEY = env('WEATHER_API_KEY');
-
 		\Log::info("WeatherApiProvider: Fetching weather forecast for Location: {$location->name}");
-
+		
 		// WeatherAPI: https://www.weatherapi.com/docs/
-		$api_url = "https://api.weatherapi.com/v1/forecast.json?key={$WEATHER_API_KEY}&q={$location->latitude},{$location->longitude}&days=3";
+		$WEATHER_API_KEY = env('WEATHER_API_KEY');
+		$forecast_days = 3;
+
+		$api_url = "https://api.weatherapi.com/v1/forecast.json?key={$WEATHER_API_KEY}&q={$location->latitude},{$location->longitude}&days={$forecast_days}";
 
 		$response = Http::withOptions(['verify' => false])->get($api_url);
 

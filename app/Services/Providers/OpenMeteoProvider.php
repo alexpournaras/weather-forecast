@@ -15,7 +15,11 @@ class OpenMeteoProvider implements WeatherForecastProviderInterface
 		\Log::info("OpenMeteoProvider: Fetching weather forecast for Location: {$location->name}");
 
 		// Open-Meteo: https://open-meteo.com/en/docs
-		$api_url = "https://api.open-meteo.com/v1/forecast?latitude={$location->latitude}&longitude={$location->longitude}&hourly=temperature_2m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=3";
+		$forecast_days = 3;
+		$daily_parameters = 'temperature_2m_max,temperature_2m_min,precipitation_sum';
+		$hourly_parameters = 'temperature_2m,precipitation';
+
+		$api_url = "https://api.open-meteo.com/v1/forecast?latitude={$location->latitude}&longitude={$location->longitude}&hourly={$hourly_parameters}&daily={$daily_parameters}&forecast_days={$forecast_days}";
 
 		$response = Http::withOptions(['verify' => false])->get($api_url);
 
